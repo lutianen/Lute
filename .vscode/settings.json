@@ -1,0 +1,64 @@
+{
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+    
+    
+    // todo-tree settings
+    "todo-tree.regex.regex": "((%|#|//|<!--|^\\s*\\*)\\s*($TAGS)|^\\s*- \\[( |x|X)\\])",
+    "todo-tree.regex.regexCaseSensitive": true,
+    // 在树中显示待办事项的计数
+    "todo-tree.tree.showCountsInTree": true,
+    "todo-tree.general.tags": [
+        "TODO",     // TODO     代表未完成事项
+        "FIXME",    // FIXME    代表需要修复的事项
+        "DONE",     // DONE     代表已完成事项
+        "NOTE",     // NOTE     添加一些说明文字
+        "BUG",      // BUG      代表必须修复的 BUG
+        "XXX",      // XXX      代表标识处代码虽然实现了功能，但是实现的方法有待商榷，希望将来能改进
+    ],
+    "todo-tree.highlights.defaultHighlight": {
+        "foreground": "#FFFFFF",
+        "background": "#00CED1",
+        "icon": "check",
+        "type": "tag",
+        "iconColour": "#cefc00",
+        "gutterIcon": true,
+
+        // 用于在右侧拖动条中设置标记的车道
+        // "rulerLane": "full",
+    },
+    "todo-tree.highlights.customHighlight": {
+        "TODO": {
+            "icon": "unverified",
+            "background": "#CEFC00",
+            "iconColour": "#CEFC00",
+            "foreground": "#000000",
+        },
+        "FIXME": {
+            "icon": "flame", 
+            "background": "#FF0000",
+            "foreground": "#000000",
+            "iconColour": "#FF0000",
+        },
+        "BUG": {
+            "icon": "bug",
+            "background": "#00FF00",
+            "foreground": "#000000",
+            "iconColour": "#00FF00",
+        },
+        "DONE": {
+            "icon": "issue-closed",
+            "background": "#FF00FF",
+        },
+        "NOTE": {
+            // "icon": "fold",
+            "icon": "note",
+            "background": "#00CED1",
+            "iconColour ": "#f90"
+        },
+        "XXX":{
+            "icon": "beaker",
+            "background": "#FFA500",
+            "iconColour": "#FFA500"
+        },
+    }
+}
