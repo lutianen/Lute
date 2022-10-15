@@ -32,5 +32,4 @@
 *.app
 
 build/
-.vscode/
 .idea/
