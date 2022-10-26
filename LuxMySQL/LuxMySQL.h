@@ -28,7 +28,7 @@ struct LOGINENV
     char ip[32];
 
     /* The socket port to connect to MySQL */
-    int port;
+    unsigned int port;
 
     /* user */
     char user[32];
@@ -168,6 +168,8 @@ private:
     /// Input params
     MYSQL_BIND params_in_[MAXPARAMS];
     unsigned long int params_in_length_[MAXPARAMS];
+
+    /// NOTE Change "my_bool" to "bool"
     bool params_in_is_null_[MAXPARAMS];
     enum enum_field_types params_in_buffer_type_[MAXPARAMS];
     /// Output params

@@ -19,6 +19,8 @@
 #include <cstdio>   /// vsnsprintf snprintf
 #include <ctype.h>  /// isdigit
 
+#include <iostream>
+
 /**********************************************************************/
 connection::connection()
 {
@@ -60,7 +62,7 @@ connection::setDbOpt(char *connstr)
     epos = ::strstr(bpos, ",");
     if (epos != nullptr) 
     {
-        ::strncpy(env_.ip, bpos, epos - bpos);
+        ::strncpy(env_.ip, bpos, static_cast<size_t>(epos - bpos));
     } else return;
 
     // user
@@ -68,7 +70,7 @@ connection::setDbOpt(char *connstr)
     epos = 0;
     epos = ::strstr(bpos, ",");
     if (epos != nullptr) {
-        ::strncpy(env_.user, bpos, epos - bpos);
+        ::strncpy(env_.user, bpos, static_cast<size_t>(epos - bpos));
     } else return;
 
     // pass
@@ -76,7 +78,7 @@ connection::setDbOpt(char *connstr)
     epos = 0;
     epos = ::strstr(bpos, ",");
     if (epos != nullptr) {
-        ::strncpy(env_.pass, bpos, epos - bpos);
+        ::strncpy(env_.pass, bpos, static_cast<size_t>(epos - bpos));
     } else return;
 
 
@@ -85,11 +87,11 @@ connection::setDbOpt(char *connstr)
     epos = 0;
     epos = ::strstr(bpos, ",");
     if (epos != nullptr) {
-        ::strncpy(env_.dbname, bpos, epos - bpos);
+        ::strncpy(env_.dbname, bpos, static_cast<size_t>(epos - bpos));
     } else return;
 
     // port
-    env_.port = atoi(epos + 1);
+    env_.port = static_cast<unsigned int>(atoi(epos + 1));
 }
 
 int connection::connectToDb(
@@ -113,9 +115,9 @@ int connection::connectToDb(
         return -1;
     }
 
-    if (mysql_real_connect(conn_, env_.ip, env_.user, env_.pass, env_.dbname, env_.port, nullptr, 0)) 
+    if (mysql_real_connect(conn_, env_.ip, env_.user, env_.pass, env_.dbname, env_.port, nullptr, 0) != conn_)
     {
-        cda_.rc = mysql_errno(conn_);
+        cda_.rc = static_cast<int>(mysql_errno(conn_));
         ::strncpy(cda_.message, mysql_error(conn_), 2000);
         mysql_close(conn_);
         conn_ = nullptr;
@@ -123,11 +125,11 @@ int connection::connectToDb(
     }
 
     // Set auto commit flag
-    autoCommitOpt_ = autoCommitOpt;
+    autoCommitOpt_ = static_cast<int>(autoCommitOpt);
 
     if(mysql_autocommit(conn_, autoCommitOpt_) != 0)
     {
-        cda_.rc = mysql_errno(conn_);
+        cda_.rc = static_cast<int>(mysql_errno(conn_));
         ::strncpy(cda_.message, mysql_error(conn_), 2000);
         mysql_close(conn_);
         conn_ = nullptr;
@@ -186,7 +188,7 @@ connection::rollback()
 
     if (mysql_rollback(conn_) != 0)
     {
-        cda_.rc = mysql_errno(conn_);
+        cda_.rc = static_cast<int>(mysql_errno(conn_));
         ::strncpy(cda_.message, mysql_error(conn_), 2000);
 
         mysql_close(conn_);
@@ -212,7 +214,7 @@ connection::commit()
 
     if (mysql_commit(conn_) != 0) 
     {
-        cda_.rc = mysql_errno(conn_);
+        cda_.rc = static_cast<int>(mysql_errno(conn_));
         ::strncpy(cda_.message, mysql_error(conn_), 2000);
 
         mysql_close(conn_);
@@ -239,7 +241,7 @@ connection::err_report()
     cda_.rc = -1;
     ::strncpy(cda_.message, "call err_report failed.", 128);
     
-    cda_.rc = mysql_errno(conn_);
+    cda_.rc = static_cast<int>(mysql_errno(conn_));
     ::strncpy(cda_.message, mysql_error(conn_), 2000);
 
     return;
@@ -374,7 +376,7 @@ sqlstatement::err_report()
     cda_.rc = -1;
     ::strncpy(cda_.message, "call err_report() failed.\n", 128);
 
-    cda_.rc = mysql_stmt_errno(handle_);
+    cda_.rc = static_cast<int>(mysql_stmt_errno(handle_));
 
     ::snprintf(cda_.message, 2000, 
         "%d, %s", cda_.rc, mysql_stmt_error(handle_));
@@ -455,6 +457,18 @@ sqlstatement::prepare(const char *fmt,
 }
 
 
+
+/// @brief
+///  @usage:stmt.prepare("
+///        insert grils (id, name, weight, btime)
+///             VALUES (:1, :2, :3, str_to_date(:4, '%%Y-%%m-%%d %%h:%%i:%%s'))");
+///         stmt.bindin(1, &stgrils.id);
+///         stmt.bindin(2, stgrils.name, 30);
+///         stmt.bindin(3, &stgrils.weight);
+///         stmt.bindin(4, stgrils.btime, 19);
+/// @param position 
+/// @param value 
+/// @return 
 int
 sqlstatement::bindin(unsigned int position, int *value)
 {

@@ -27,7 +27,7 @@ LuxUtils::LuxToUpper(char *str)
 
     for (size_t i = 0; i < strLen; ++i) 
         if ((str[i] >= 'a') && (str[i] <= 'z'))
-            str[i] = str[i] - 32;
+            str[i] = static_cast<char>(str[i] - 32);
 }
 
 
@@ -97,7 +97,7 @@ LuxUtils::LuxUpdateStr(char *str,
             break;
         
         ::memset(strTemp, 0, sizeof(strTemp));
-        ::strncpy(strTemp, str, strPos - str);
+        ::strncpy(strTemp, str, static_cast<size_t>(strPos - str));
         ::strcat(strTemp, str2);
         ::strcat(strTemp, strPos + ::strlen(str1));
         ::strcpy(str, strTemp);
