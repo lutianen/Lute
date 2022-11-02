@@ -1,9 +1,17 @@
 {
+    "cmake.sourceDirectory": "${workspaceFolder}/LuxDLL",
     "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
-    
+    "editor.fontFamily": "Source Code Pro",
+    "editor.fontSize": 16,
+    "editor.wordWrap": "on",
+    "C_Cpp.codeAnalysis.clangTidy.enabled": true,
+    "C_Cpp.codeAnalysis.clangTidy.checks.enabled": [
+        "cppcoreguidelines-*",
+        "clang-analyzer-core.*"
+    ],
     
     // todo-tree settings
-    "todo-tree.regex.regex": "((%|#|//|<!--|^\\s*\\*)\\s*($TAGS)|^\\s*- \\[( |x|X)\\])",
+    "todo-tree.regex.regex": "((%|#|\"\"\"|//|<!--|^\\s*\\*)\\s*($TAGS)|^\\s*- \\[( |x|X)\\])",
     "todo-tree.regex.regexCaseSensitive": true,
     // 在树中显示待办事项的计数
     "todo-tree.tree.showCountsInTree": true,
@@ -14,6 +22,8 @@
         "NOTE",     // NOTE     添加一些说明文字
         "BUG",      // BUG      代表必须修复的 BUG
         "XXX",      // XXX      代表标识处代码虽然实现了功能，但是实现的方法有待商榷，希望将来能改进
+        "- [ ]",
+        "- [x]"
     ],
     "todo-tree.highlights.defaultHighlight": {
         "foreground": "#FFFFFF",
@@ -47,12 +57,12 @@
         },
         "DONE": {
             "icon": "issue-closed",
-            "background": "#FF00FF",
+            "background": "#00CED1",
         },
         "NOTE": {
             // "icon": "fold",
             "icon": "note",
-            "background": "#00CED1",
+            "background": "#FF00FF",
             "iconColour ": "#f90"
         },
         "XXX":{
@@ -60,5 +70,17 @@
             "background": "#FFA500",
             "iconColour": "#FFA500"
         },
+
+        "- [ ]":{
+            "icon": "shield",
+            "background": "#f70202aa",
+            "iconColour": "#f70202aa",
+            "rulerColour": "#f70202aa"
+        },
+
+        "- [x]":{
+            "icon": "issue-closed",
+        }
     }
+    
 }
