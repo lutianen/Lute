@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title> Polaris </title>
+
+    <style>
+        body {
+            background-color: #58b5b9;
+            font-family: Arial, sans-serif;
+            color: rgb(255, 255, 255);
+        }
+
+        .container {
+            display: flex;
+            flex-direction: row;
+            width: 80%;
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            padding-top: 100px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 1.2;
+        }
+
+        p {
+            font-size: 1.5em;
+            margin-top: 0;
+        }
+
+        button:hover {
+            background-color: #333;
+            color: white;
+        }
+
+        .star {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle at 40px 40px, white 0%, rgba(255, 255, 255, 0) 70%);
+            transform: rotate(45deg);
+            animation: twinkle 5s infinite;
+        }
+
+        .star:nth-of-type(1) {
+            top: 20%;
+            left: 10%;
+        }
+
+        .star:nth-of-type(2) {
+            top: 50%;
+            left: 30%;
+        }
+
+        .star:nth-of-type(3) {
+            top: 70%;
+            left: 70%;
+        }
+
+        .star:nth-of-type(4) {
+            top: 80%;
+            left: 90%;
+        }
+
+        .star:nth-of-type(5) {
+            top: 10%;
+            left: 80%;
+        }
+
+        @keyframes twinkle {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.3;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div align="center">
+        <h1>Welcome to Lux Polaris Website</h1>
+    </div>
+    <div class="container">
+        <form action="login">
+            <div align="left"> <label for="Username" style="display:inline-block; width:40px;">Username</label>
+            </div>
+            <input type="text" id="Username" name="Username" class="display:inline-block; width:90px;" required />
+
+            <div align="left"> <label for="password" style="display:inline-block; width:40px;">Password</label>
+            </div>
+            <input type="password" id="password" name="password" class="display:inline-block; width:90px;"
+                required /><br>
+
+            <div align="left"> <button type="submit" class="display:inline-block; width:20px;">Login</button>
+                <a href="/register" class="color: white;">Go to Register</a></p>
+            </div>
+    </div>
+
+    </form>
+
+    <div class="star"></div>
+    <div class="star"></div>
+    <div class="star"></div>
+    <div class="star"></div>
+    <div class="star"></div>
+    </div>
+
+</body>

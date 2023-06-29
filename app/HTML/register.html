@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Animated Background with Email Registration</title>
+    <style>
+        body {
+            background-color: #58b5b9;
+            font-family: Arial, sans-serif;
+            color: rgb(255, 255, 255);
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: row;
+            width: 80%;
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            padding-top: 100px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 1.2;
+        }
+
+        p {
+            font-size: 1.5em;
+            margin-top: 0;
+        }
+
+        button:hover {
+            background-color: #333;
+            color: white;
+        }
+
+        .star {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle at 40px 40px, white 0%, rgba(255, 255, 255, 0) 70%);
+            transform: rotate(45deg);
+            animation: twinkle 5s infinite;
+        }
+
+        .star:nth-of-type(1) {
+            top: 20%;
+            left: 10%;
+        }
+
+        .star:nth-of-type(2) {
+            top: 50%;
+            left: 30%;
+        }
+
+        .star:nth-of-type(3) {
+            top: 70%;
+            left: 70%;
+        }
+
+        .star:nth-of-type(4) {
+            top: 80%;
+            left: 90%;
+        }
+
+        .star:nth-of-type(5) {
+            top: 10%;
+            left: 80%;
+        }
+
+        @keyframes twinkle {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.3;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="background">
+        <div class="overlay"></div>
+    </div>
+    <div class="container">
+        <form action="register" method="post">
+            <div align="left"> <label for="Username" style="display:inline-block; width:80px;">Username</label>
+                <input type="text" name="Username" class="form-input" required />
+            </div> <br>
+
+            <div align="left"> <label for="email" style="display:inline-block; width:80px;">Email</label>
+                <input type="email" id="email" name="email" class="form-input" required />
+            </div> <br>
+
+            <div align="left"> <label for="password" style="display:inline-block; width:80px;">Password</label>
+                <input type="password" id="password" name="password" class="form-input" required />
+            </div> <br>
+
+            <div align="left"> <button type="submit" class="form-submit">Confirm</button> </div><br>
+        </form>
+
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+</body>
+
+</html>
