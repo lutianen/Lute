@@ -14,4 +14,5 @@ set(CMAKE_CXX_FLAGS "-Wall -Wextra -Werror -Wold-style-cast")
 
 # submodules
 add_subdirectory(Base)
+add_subdirectory(polaris)
 
