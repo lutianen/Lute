@@ -95,6 +95,7 @@ void EPollPoller::fillActiveChannels(int numEvents,
         auto it = channels_.find(fd);
         assert(it != channels_.end());
         assert(it->second == channel);
+        (void)it;
 
         channel->set_revents(static_cast<int>(
             events_[static_cast<std::vector<EventList>::size_type>(i)].events));

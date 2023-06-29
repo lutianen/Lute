@@ -113,8 +113,8 @@ public:
         // const char* crlf = std::search(start, beginWrite(), kCRLF, kCRLF +
         // 2);
         /// XXX Use memmem() instead?
-        const char* crlf = reinterpret_cast<const char*>(
-            ::memmem(peek(), readableBytes(), kCRLF, 2));
+        const char* crlf = reinterpret_cast<const char*>(::memmem(
+            start, static_cast<size_t>(beginWrite() - start), kCRLF, 2));
         return crlf == beginWrite() ? nullptr : crlf;
     }
 
