@@ -63,10 +63,16 @@ public:
     inline int64_t peekInt64() const {
         assert(readableBytes() >= sizeof(int64_t));
         int64_t be64 = 0;
-        ::memcpy(&be64, peek(), sizeof be64);
-        assert(be64 >= 0);
+        ::memcpy(&be64, peek(), sizeof(be64));
         return static_cast<int64_t>(
             sockets::networkToHost64(static_cast<uint64_t>(be64)));
+    }
+
+    inline uint64_t peekUint64() const {
+        assert(readableBytes() >= sizeof(uint64_t));
+        uint64_t be64 = 0;
+        ::memcpy(&be64, peek(), sizeof(be64));
+        return sockets::networkToHost64(be64);
     }
 
     /// @brief Peek int32_t from network endian
@@ -74,24 +80,42 @@ public:
     inline int32_t peekInt32() const {
         assert(readableBytes() >= sizeof(int32_t));
         int32_t be32 = 0;
-        ::memcpy(&be32, peek(), sizeof be32);
-        assert(be32 >= 0);
+        ::memcpy(&be32, peek(), sizeof(be32));
         return static_cast<int32_t>(
             sockets::networkToHost32(static_cast<uint32_t>(be32)));
+    }
+
+    inline uint32_t peekUint32() const {
+        assert(readableBytes() >= sizeof(uint32_t));
+        uint32_t be32 = 0;
+        ::memcpy(&be32, peek(), sizeof(be32));
+        return sockets::networkToHost32(be32);
     }
 
     inline int16_t peekInt16() const {
         assert(readableBytes() >= sizeof(int16_t));
         int16_t be16 = 0;
-        ::memcpy(&be16, peek(), sizeof be16);
-        assert(be16 >= 0);
+        ::memcpy(&be16, peek(), sizeof(be16));
         return static_cast<int16_t>(
             sockets::networkToHost16(static_cast<uint16_t>(be16)));
+    }
+
+    inline uint16_t peekUint16() const {
+        assert(readableBytes() >= sizeof(uint16_t));
+        uint16_t be16 = 0;
+        ::memcpy(&be16, peek(), sizeof(be16));
+        return sockets::networkToHost16(be16);
     }
 
     inline int8_t peekInt8() const {
         assert(readableBytes() >= sizeof(int8_t));
         int8_t x = *peek();
+        return x;
+    }
+
+    inline uint8_t peekUint8() const {
+        assert(readableBytes() >= sizeof(uint8_t));
+        uint8_t x = *peek();
         return x;
     }
 
@@ -102,7 +126,7 @@ public:
         // const char* crlf = std::search(peek(), beginWrite(), kCRLF, kCRLF +
         // 2);
         /// XXX Use memmem() instead?
-        const char* crlf = reinterpret_cast<const char*>(
+        auto crlf = reinterpret_cast<const char*>(
             ::memmem(peek(), readableBytes(), kCRLF, 2));
         return crlf == beginWrite() ? nullptr : crlf;
     }
@@ -113,7 +137,7 @@ public:
         // const char* crlf = std::search(start, beginWrite(), kCRLF, kCRLF +
         // 2);
         /// XXX Use memmem() instead?
-        const char* crlf = reinterpret_cast<const char*>(::memmem(
+        auto crlf = reinterpret_cast<const char*>(::memmem(
             start, static_cast<size_t>(beginWrite() - start), kCRLF, 2));
         return crlf == beginWrite() ? nullptr : crlf;
     }
@@ -121,14 +145,14 @@ public:
     inline const char* findEOL() const {
         /// memchr 在参数 str 所指向的字符串的前 n
         /// 个字节中搜索第一次出现字符 c（一个无符号字符）的位置
-        const void* eol = ::memchr(peek(), '\n', readableBytes());
+        auto eol = ::memchr(peek(), '\n', readableBytes());
         return reinterpret_cast<const char*>(eol);
     }
 
     inline const char* findEOL(const char* start) const {
         assert(peek() <= start);
         assert(start <= beginWrite());
-        const void* eol =
+        auto eol =
             ::memchr(start, '\n', static_cast<size_t>(beginWrite() - start));
         return reinterpret_cast<const char*>(eol);
     }
@@ -157,9 +181,13 @@ public:
     }
 
     inline void retrieveInt64() { retrieve(sizeof(int64_t)); }
+    inline void retrieveUint64() { retrieve(sizeof(uint64_t)); }
     inline void retrieveInt32() { retrieve(sizeof(int32_t)); }
+    inline void retrieveUint32() { retrieve(sizeof(uint32_t)); }
     inline void retrieveInt16() { retrieve(sizeof(int16_t)); }
+    inline void retrieveUint16() { retrieve(sizeof(uint16_t)); }
     inline void retrieveInt8() { retrieve(sizeof(int8_t)); }
+    inline void retrieveUint8() { retrieve(sizeof(uint8_t)); }
 
     inline std::string retrieveAllAsString() {
         return retrieveAsString(readableBytes());
@@ -212,55 +240,95 @@ public:
     }
 
     inline void append(const void* data, size_t len) {
-        append(static_cast<const char*>(data), len);
+        append(reinterpret_cast<const char*>(data), len);
     }
 
     /// @brief Append int64_t using network endian
     inline void appendInt64(int64_t x) {
-        int64_t be64 = static_cast<int64_t>(
+        auto be64 = static_cast<int64_t>(
             sockets::hostToNetwork64(static_cast<uint64_t>(x)));
-        append(&be64, sizeof be64);
+        append(&be64, sizeof(be64));
+    }
+
+    inline void appendUint64(uint64_t x) {
+        auto be64 = sockets::hostToNetwork64(x);
+        append(&be64, sizeof(be64));
     }
 
     /// @brief Append int32_t using network endian
     inline void appendInt32(int32_t x) {
-        int32_t be32 = static_cast<int32_t>(
+        auto be32 = static_cast<int32_t>(
             sockets::hostToNetwork32(static_cast<uint32_t>(x)));
-        append(&be32, sizeof be32);
+        append(&be32, sizeof(be32));
+    }
+
+    inline void appendUint32(uint32_t x) {
+        auto be32 = sockets::hostToNetwork32(x);
+        append(&be32, sizeof(be32));
     }
 
     /// @brief  Append int16_t using network endian
     inline void appendInt16(int16_t x) {
-        int16_t be16 = static_cast<int16_t>(
+        auto be16 = static_cast<int16_t>(
             sockets::hostToNetwork16(static_cast<uint16_t>(x)));
-        append(&be16, sizeof be16);
+        append(&be16, sizeof(be16));
+    }
+
+    inline void appendUint16(uint16_t x) {
+        auto be16 = sockets::hostToNetwork16(x);
+        append(&be16, sizeof(be16));
     }
 
     /// @brief Append int8_t using network endian
-    inline void appendInt8(int8_t x) { append(&x, sizeof x); }
+    inline void appendInt8(int8_t x) { append(&x, sizeof(x)); }
+    inline void appendUint8(uint8_t x) { append(&x, sizeof(x)); }
 
     /// @brief Read int64_t from network endian
     /// Require: buf->readableBytes() >= sizeof(int32_t)
     inline int64_t readInt64() {
-        int64_t result = peekInt64();
+        auto result = peekInt64();
         retrieveInt64();
         return result;
     }
 
+    inline uint64_t readUint64() {
+        auto result = peekUint64();
+        retrieveUint64();
+        return result;
+    }
+
     inline int32_t readInt32() {
-        int32_t result = peekInt32();
+        auto result = peekInt32();
         retrieveInt32();
         return result;
     }
 
+    inline uint32_t readUint32() {
+        auto result = peekUint32();
+        retrieveUint32();
+        return result;
+    }
+
     inline int16_t readInt16() {
-        int16_t result = peekInt16();
+        auto result = peekInt16();
         retrieveInt16();
         return result;
     }
 
+    inline uint16_t readUint16() {
+        auto result = peekUint16();
+        retrieveUint16();
+        return result;
+    }
+
     inline int8_t readInt8() {
-        int8_t result = peekInt8();
+        auto result = peekInt8();
+        retrieveInt8();
+        return result;
+    }
+
+    inline uint8_t readUint8() {
+        auto result = peekUint8();
         retrieveInt8();
         return result;
     }
@@ -268,30 +336,47 @@ public:
     inline void prepend(const void* data, size_t len) {
         assert(len <= prependableBytes());
         readerIndex_ -= len;
-        const char* d = reinterpret_cast<const char*>(data);
+        auto d = reinterpret_cast<const char*>(data);
         std::copy(d, d + len, begin() + readerIndex_);
     }
 
     /// @brief Prepend int64_t using network endian
     inline void prependInt64(int64_t x) {
-        int64_t be64 = static_cast<int64_t>(
+        auto be64 = static_cast<int64_t>(
             sockets::hostToNetwork64(static_cast<uint64_t>(x)));
-        prepend(&be64, sizeof be64);
+        prepend(&be64, sizeof(be64));
+    }
+
+    inline void prependUint64(uint64_t x) {
+        auto be64 = sockets::hostToNetwork64(x);
+        prepend(&be64, sizeof(be64));
     }
 
     inline void prependInt32(int32_t x) {
-        int32_t be32 = static_cast<int32_t>(
+        auto be32 = static_cast<int32_t>(
             sockets::hostToNetwork32(static_cast<uint32_t>(x)));
-        prepend(&be32, sizeof be32);
+        prepend(&be32, sizeof(be32));
+    }
+
+    inline void prependUint32(uint32_t x) {
+        auto be32 = sockets::hostToNetwork32(x);
+        prepend(&be32, sizeof(be32));
     }
 
     inline void prependInt16(int16_t x) {
-        int16_t be16 = static_cast<int16_t>(
+        auto be16 = static_cast<int16_t>(
             sockets::hostToNetwork16(static_cast<uint16_t>(x)));
-        prepend(&be16, sizeof be16);
+        prepend(&be16, sizeof(be16));
     }
 
-    inline void prependInt8(int8_t x) { prepend(&x, sizeof x); }
+    inline void prependUint16(uint16_t x) {
+        auto be16 = sockets::hostToNetwork16(x);
+        prepend(&be16, sizeof(be16));
+    }
+
+    inline void prependInt8(int8_t x) { prepend(&x, sizeof(x)); }
+
+    inline void prependUint8(uint8_t x) { prepend(&x, sizeof(x)); }
 
     /// XXX Test performance to do
     inline void shrink(size_t reserve) {
