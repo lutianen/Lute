@@ -219,8 +219,7 @@ void Application::onRequest(const HttpRequest& req, HttpResponse* resp) {
             passwd = iter->str(2);
         }
 
-        // 利用全局缓存，不用连接数据库
-        // FIXME 使用 Redis 缓存
+        //  使用 Redis 缓存
         if (redisConn_.hasHField(HASH_KEY, username)) {
             std::string pwd;
             redisConn_.getHField(HASH_KEY, username, pwd);
@@ -292,35 +291,49 @@ void Application::onRequest(const HttpRequest& req, HttpResponse* resp) {
 }
 
 std::string readFile2String(const char* filename) {
-    int fd = open(filename, O_RDONLY);
-    if (fd < 0) {
-        LOG_ERROR << "Failed to open file " << filename;
-        // exit(EXIT_FAILURE);
+    std::ifstream ifs;
+    Lute::FSUtil::openForRead(ifs, filename, std::ios_base::in | std::ios_base::binary);
+
+    if (!ifs.is_open()) {
+        LOG_ERROR << "Open " << filename << " failed";
+        return "";
+    } else {
+        // 将文件读入到ostringstream对象buf中
+        std::ostringstream buf{};
+        char ch;
+        while (buf && ifs.get(ch)) buf.put(ch);
+
+        return buf.str();
     }
+    // int fd = ::open(filename, O_RDONLY | O_CLOEXEC);
+    // if (fd < 0) {
+    //     LOG_ERROR << "Failed to open file " << filename;
+    //     // exit(EXIT_FAILURE);
+    // }
 
-    struct stat statbuf;
-    if (fstat(fd, &statbuf) < 0) {
-        LOG_ERROR << "Failed to get file size";
-        // exit(EXIT_FAILURE);
-    }
+    // struct stat statbuf;
+    // if (::fstat(fd, &statbuf) < 0) {
+    //     LOG_ERROR << "Failed to get file size";
+    //     // exit(EXIT_FAILURE);
+    // }
 
-    char* file_contents = static_cast<char*>(
-        mmap(0, statbuf.st_size, PROT_READ | PROT_EXEC, MAP_PRIVATE, fd, 0));
-    if (file_contents == MAP_FAILED) {
-        LOG_ERROR << "Failed to mmap file";
-        // exit(EXIT_FAILURE);
-    }
+    // char* file_contents = static_cast<char*>(
+    //     ::mmap(0, statbuf.st_size, PROT_READ | PROT_EXEC, MAP_PRIVATE, fd, 0));
+    // if (file_contents == MAP_FAILED) {
+    //     LOG_ERROR << "Failed to mmap file";
+    //     // exit(EXIT_FAILURE);
+    // }
 
-    std::string str(file_contents, statbuf.st_size);
+    // std::string str(file_contents, statbuf.st_size);
 
-    if (munmap(file_contents, statbuf.st_size) < 0) {
-        LOG_ERROR << "Failed to munmap file";
-        // exit(EXIT_FAILURE);
-    }
+    // if (::munmap(file_contents, statbuf.st_size) < 0) {
+    //     LOG_ERROR << "Failed to munmap file";
+    //     // exit(EXIT_FAILURE);
+    // }
 
-    close(fd);
+    // ::close(fd);
 
-    return str;
+    // return str;
 }
 
 std::string Application::getHtml() {
@@ -367,7 +380,12 @@ GREEN "                        `--`----'        ---`-'    \\   \\  /  \r\n" CLR
 RED "                                                    `----'   \r\n" CLR 
 ;
 
+void output(const char*, int) {}
+
 int main(int argc, char* argv[]) {
+    initLogger(Lute::Logger::LogLevel::INFO);
+    Lute::Logger::setOutput(output);
+
     std::string dbIp = "192.168.1.108";
     uint16_t dbPort = 3306;
     std::string user = "lutianen";
