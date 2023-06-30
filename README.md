@@ -1,6 +1,11 @@
-![](https://raw.githubusercontent.com/lutianen/PicBed/main/202306302231793.png)
+<div align=center><img src="./doc/ICON.png" width="640" height="360"></div>
 
 **Lute is a event-driven network library in Linux. This project uses the epoll I/O event notification mechanism, and it supports GET/POST requests for HTTP protocol.**
+
+## Dependency
+
+- 编译器：g++ / clang
+- 数据库：MySQL、Redis
 
 ## Deployment
 
@@ -29,18 +34,38 @@
     make run
     ```
 
+## Graphviz
+
+![](doc/graphviz.svg)
+
 ## 特点
 
-
-
-## 附录
-
-- [常用工具介绍]()
-
-- [GoogleTest 使用指南]()
-
-- [核心类介绍]()
+- 双缓冲高效异步日志
+- HTTP 与网络库模块分离
+- 支持 GET / POST 请求
+- Reactor 高并发模型 ( One loop per thread )
+- MySQL 连接池 + Redis 缓冲
 
 ## 压力测试
 
 ### Webbench
+
+- **webbench with logger**
+
+    **~4W QPS**  
+
+    ![](doc/webbench-with-logger.png)
+
+- **webbench without logger**
+
+    **~5W QPS**
+
+    ![](doc/webbench-without-logger.png)
+
+## 附录
+
+- [常用工具介绍](doc/tools.md)
+
+- [GoogleTest 使用指南](doc/GoogleTest.md)
+
+- [核心类介绍](doc/CoreClass.md)
