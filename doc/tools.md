@@ -70,3 +70,62 @@ nc [-hlnruz][-g<网关...>][-G<指向器数目>][-i<延迟秒数>][-o<输出文�
         nc -nv 192.168.75.121 8888 -i 1 < node_exporter-1.3.1.linux-amd64.tar.gz
         # ⚠️ 注意：-i 表示闲置超时时间 
         ```
+
+## Google Benchmark
+
+专业的性能测试框架，只需要将要测试的代码放入`for (auto _ : bm)` 循环里即可，框架会自动决定要循环多少次，保证结果是准确的，同时不浪费太多时间。
+
+**CMakeLists.txt 导入**
+
+```cmake
+...
+find_package(benchmark REQUIRED)
+target_link_libraries(test PUBLIC benchmark::benchmark)
+...
+```
+
+**测试代码**
+
+```c++
+#include <iostream>
+#include <vector>
+#include <cmath>
+#include <benchmark/benchmark.h>
+
+constexpr size_t n = 1 << 27;
+std::vector<float> a(n);
+
+void BM_for(benchmark::State &bm) {
+    for (auto _ : bm) {
+        // 待测试代码
+        for (size_t i = 0; i < a.size(); ++i) {
+            a[i] = std::sin(i);
+        }
+    }
+}
+BENCHMARK(BM_for);
+
+BENCHMARK_MAIN();
+```
+
+框架中`BENCHMARK_MAIN()`自动生成一个 `main` 函数，从而生成一个可执行文件以供运行。
+
+```bash
+# 执行编译生成的可执行文件
+./build/bin/test
+```
+
+运行会得到的测试结果打印在终端上。
+
+> **命令行参数**
+
+还卡一使用某些命令行参数来控制测试的输出格式为 `csv` 等，可调用 `--help` 查看更多。
+
+```bash
+./build/bin/test --benchmark_format=csv
+```
+
+
+
+
+
