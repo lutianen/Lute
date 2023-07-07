@@ -31,6 +31,10 @@ int createEventfd() {
     return evtfd;
 }
 
+/**
+ * @brief 为了方式对端关闭，系统产生 SIGPIPE 信号（默认终止进程）
+ *        解决方案：忽略 SIGPIPE 信号
+ */
 #pragma GCC diagnostic ignored "-Wold-style-cast"
 class IgnoreSigPipe {
 public:
@@ -41,6 +45,7 @@ public:
 };
 #pragma GCC diagnostic error "-Wold-style-cast"
 
+// 调用 IgnoreSigPipe 的构造函数，忽略 SIGPIPE 信号
 IgnoreSigPipe initObj;
 }  // namespace
 
