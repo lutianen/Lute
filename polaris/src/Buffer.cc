@@ -18,7 +18,7 @@ const size_t Buffer::kCheapPrepend;
 const size_t Buffer::kInitialSize;
 
 ///
-/// @brief
+/// @brief readv + extrabuf - 解决了缓冲区设置太大或太小的问题
 /// @param fd
 /// @param savedErrno
 /// @return
