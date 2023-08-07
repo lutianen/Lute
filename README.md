@@ -36,7 +36,7 @@
 
 ## Graphviz
 
-![](doc/graphviz.svg)
+![Graphviz](doc/graphviz.svg)
 
 ## 特点
 
@@ -54,13 +54,17 @@
 
     **~4W QPS**  
 
-    ![](doc/webbench-with-logger.png)
+    ![webbench with logger](doc/webbench-with-logger.png)
 
 - **webbench without logger**
 
     **~5W QPS**
 
-    ![](doc/webbench-without-logger.png)
+    ![webbench without logger](doc/webbench-without-logger.png)
+
+## TODO List
+
+- [ ]  Support Docker
 
 ## 附录
 
